@@ -11,7 +11,7 @@ A website made with React for [Gector.ai](https://github.com/NeutralSen/Gector.a
 - [@Yami98](https://github.com/Yami98)
 - [@RadjaShiqnals](https://github.com/RadjaShiqnals)
 
-This is a web application that uses OpenAI to provide a chat interface with an AI assistant that has expertise in gaming and anime.
+This is a web application that uses OpenAI Library to provide a chat interface with an AI assistant that has expertise in gaming, anime, or other stuff.
 
 ## Getting Started
 
