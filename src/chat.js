@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import OpenAI from "openai";
 import "./App.css"; // We'll add styles for the chat here.
 
@@ -24,15 +23,14 @@ const Chat = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return; // Skip empty messages
-
+  
     // Add user's message to the chat
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput(""); // Clear input
     setIsLoading(true);
-
+  
     try {
-
       const response = await openai.chat.completions.create({
         model: "Gector-1",
         messages: [
@@ -51,21 +49,30 @@ const Chat = () => {
         max_tokens: 120,
         stream: false,
       });
-
+  
       // Add AI's response to the chat
       const aiMessage = { sender: "ai", text: response.choices[0].message.content };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "ai", text: "Sorry, something went wrong!" },
-      ]);
+  
+      // Check for specific error (503 Service Unavailable) or other signs of server overload
+      if (error.response && error.response.status === 503) {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "ai", text: "Sorry, the server is busy. Please try again later!" },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "ai", text: "Sorry, something went wrong!" },
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="chat-container">
       <div className="chat-box">
