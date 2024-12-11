@@ -6,7 +6,7 @@ A website made with React for [Gector.ai](https://github.com/NeutralSen/Gector.a
 
 - Coming soon...
 
-## Develpoer
+## Developer
 
 - [@Yami98](https://github.com/Yami98)
 - [@RadjaShiqnals](https://github.com/RadjaShiqnals)
