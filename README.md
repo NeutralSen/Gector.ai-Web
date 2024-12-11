@@ -42,8 +42,8 @@ Make sure you have the following installed on your machine:
 3. **Create a .env file in the root directory and add your OpenAI API key and endpoint:**
 
     ```sh
-    OPENAI_API_KEY=your_openai_api_key
-    OPENAI_API_ENDPOINT=your_openai_api_endpoint
+    REACT_APP_API_KEY=API_KEY
+    REACT_APP_API_ENDPOINT=API_ENDPOINT
     ```
 
 ### Running the App
@@ -61,4 +61,3 @@ Make sure you have the following installed on your machine:
     ```
 
 You should now see the Gector.ai-Web application running. You can interact with the AI assistant through the chat interface.
->>>>>>> Stashed changes
