@@ -32,22 +32,22 @@ const Chat = () => {
   
     try {
       const response = await openai.chat.completions.create({
-        model: "Gector-1",
-        messages: [
-          systemMessage,
-          { role: "user", content: input },
-        ],
-        temperature: 1.2,
-        top_k: 0,
-        top_p: 1,
-        min_p: 0.1,
-        typical_p: 1,
-        top_a: 0,
-        repetition_penalty: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        max_tokens: 120,
-        stream: false,
+      model: "Gector-1",
+      messages: [
+        systemMessage,
+        { role: "user", content: input },
+      ],
+      temperature: 1.2,
+      top_k: 0,
+      top_p: 1,
+      min_p: 0.1,
+      typical_p: 1,
+      top_a: 0,
+      repetition_penalty: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      max_tokens: 120,
+      stream: false,
       });
   
       // Add AI's response to the chat
@@ -55,7 +55,7 @@ const Chat = () => {
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
-  
+      
       // Check for specific error (503 Service Unavailable) or other signs of server overload
       if (error.response && error.response.status === 503) {
         setMessages((prev) => [
