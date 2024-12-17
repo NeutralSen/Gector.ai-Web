@@ -14,7 +14,7 @@ const systemMessage = {
             Please keep responses concise unless asked for detailed explanations.`,
 };
 
-export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading) => {
+export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading, setIsGenerating) => {
   if (!input.trim()) return; // Skip empty messages
 
   // Add user's message to the chat
@@ -22,9 +22,10 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
   setMessages((prev) => [...prev, userMessage]);
   setInput(""); // Clear input
   setIsLoading(true);
+  setIsGenerating(true);
 
   try {
-    const response = await openai.chat.completions.create({
+    const stream = await openai.chat.completions.create({
       model: "Gector-1",
       messages: [
         systemMessage,
@@ -40,12 +41,30 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
       frequency_penalty: 0,
       presence_penalty: 0,
       max_tokens: 120,
-      stream: false,
+      stream: true,
     });
 
-    // Add AI's response to the chat
-    const aiMessage = { sender: "ai", text: response.choices[0].message.content };
-    setMessages((prev) => [...prev, aiMessage]);
+    let aiMessage = { sender: "ai", text: "" };
+
+    // Use for-await-of to handle streamed responses
+    for await (const chunk of stream) {
+      const delta = chunk.choices[0]?.delta?.content || "";
+      aiMessage.text += delta;
+      
+      setIsGenerating(false);
+
+      // Update the AI's message in real time
+      setMessages((prev) => {
+        const updatedMessages = [...prev];
+        const lastMessage = updatedMessages[updatedMessages.length - 1];
+        if (lastMessage && lastMessage.sender === "ai") {
+          lastMessage.text = aiMessage.text;
+        } else {
+          updatedMessages.push(aiMessage);
+        }
+        return updatedMessages;
+      });
+    }
   } catch (error) {
     console.error("Error fetching AI response:", error);
 

@@ -1,0 +1,129 @@
+diff --git a/src/components/auth/view/chat.jsx b/src/components/auth/view/chat.jsx
+index 6711894b..9847e731 100644
+--- a/src/components/auth/view/chat.jsx
++++ b/src/components/auth/view/chat.jsx
+@@ -1,4 +1,4 @@
+-import React, { useState } from "react";
++import React, { useState, useRef } from "react";
+ import { sendMessageToAI } from "./../../../utils/api/openaiservice"; // Import the sendMessageToAI function
+ import { motion } from "motion/react";
+ import logo from './../../../assets/img/gectorai.png';
+@@ -7,10 +7,13 @@ const Chat = () => {
+   const [messages, setMessages] = useState([]); // Chat messages
+   const [input, setInput] = useState(""); // User input
+   const [isLoading, setIsLoading] = useState(false); // Loading state for AI response
++  const [isGenerating, setIsGenerating] = useState(false); // Generating state for AI response
++  const [aiMessage, setAiMessage] = useState(""); // AI message being generated
+ 
+   const sendMessage = () => {
+     if (input.trim()) {
+-      sendMessageToAI(input, setMessages, setInput, setIsLoading);
++      // Create a new AbortController for each request
++      sendMessageToAI(input, setMessages, setInput, setIsLoading, setIsGenerating, setAiMessage);
+     }
+   };
+ 
+@@ -57,7 +60,7 @@ const Chat = () => {
+           ))}
+ 
+           {/* Loading indicator */}
+-          {isLoading && (
++          {isGenerating && (
+             <div className="inline-block p-3 rounded-lg text-sm leading-6 self-start bg-gray-200 text-black">
+               <p>...</p>
+             </div>
+@@ -77,6 +80,7 @@ const Chat = () => {
+               onKeyDown={handleKeyDown} // Listen for Enter key press
+               placeholder="Type your message..."
+               className="w-full p-3 text-white bg-custom-main rounded-md placeholder-white focus:outline-none"
++              disabled={isLoading} // Disable input while loading
+             />
+           </div>
+ 
+@@ -86,7 +90,10 @@ const Chat = () => {
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.9, rotate: 2 }}
+               onClick={sendMessage} // Trigger sendMessage on button click
+-              className="w-full p-3 bg-white text-black rounded-md hover:bg-white transition text-sm sm:text-base"
++              className={`w-full p-3 rounded-md transition text-sm sm:text-base ${
++                isLoading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white text-black hover:bg-gray-200"
++              }`}
++              disabled={isLoading} // Disable button while loading
+             >
+               Send
+             </motion.button>
+diff --git a/src/utils/api/openaiservice.jsx b/src/utils/api/openaiservice.jsx
+index 23c75b07..4c60c749 100644
+--- a/src/utils/api/openaiservice.jsx
++++ b/src/utils/api/openaiservice.jsx
+@@ -14,7 +14,7 @@ const systemMessage = {
+             Please keep responses concise unless asked for detailed explanations.`,
+ };
+ 
+-export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading) => {
++export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading, setIsGenerating) => {
+   if (!input.trim()) return; // Skip empty messages
+ 
+   // Add user's message to the chat
+@@ -22,15 +22,16 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
+   setMessages((prev) => [...prev, userMessage]);
+   setInput(""); // Clear input
+   setIsLoading(true);
++  setIsGenerating(true);
+ 
+   try {
+-    const response = await openai.chat.completions.create({
+-      model: "Gector-1",
++    const stream = await openai.chat.completions.create({
++      model: "pai-001-light",
+       messages: [
+         systemMessage,
+         { role: "user", content: input },
+       ],
+-      temperature: 1.2,
++      temperature: 0.7,
+       top_k: 0,
+       top_p: 1,
+       min_p: 0.1,
+@@ -40,12 +41,30 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
+       frequency_penalty: 0,
+       presence_penalty: 0,
+       max_tokens: 120,
+-      stream: false,
++      stream: true,
+     });
+ 
+-    // Add AI's response to the chat
+-    const aiMessage = { sender: "ai", text: response.choices[0].message.content };
+-    setMessages((prev) => [...prev, aiMessage]);
++    let aiMessage = { sender: "ai", text: "" };
++
++    // Use for-await-of to handle streamed responses
++    for await (const chunk of stream) {
++      const delta = chunk.choices[0]?.delta?.content || "";
++      aiMessage.text += delta;
++      
++      setIsGenerating(false);
++      
++      // Update the AI's message in real time
++      setMessages((prev) => {
++        const updatedMessages = [...prev];
++        const lastMessage = updatedMessages[updatedMessages.length - 1];
++        if (lastMessage && lastMessage.sender === "ai") {
++          lastMessage.text = aiMessage.text;
++        } else {
++          updatedMessages.push(aiMessage);
++        }
++        return updatedMessages;
++      });
++    }
+   } catch (error) {
+     console.error("Error fetching AI response:", error);
+ 
+@@ -64,4 +83,4 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
+   } finally {
+     setIsLoading(false);
+   }
+-};
++};
+\ No newline at end of file

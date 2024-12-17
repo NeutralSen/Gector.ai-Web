@@ -7,10 +7,12 @@ const Chat = () => {
   const [messages, setMessages] = useState([]); // Chat messages
   const [input, setInput] = useState(""); // User input
   const [isLoading, setIsLoading] = useState(false); // Loading state for AI response
+  const [isGenerating, setIsGenerating] = useState(false); // Generating state for AI response
+  const [aiMessage, setAiMessage] = useState(""); // AI message being generated
 
   const sendMessage = () => {
     if (input.trim()) {
-      sendMessageToAI(input, setMessages, setInput, setIsLoading);
+      sendMessageToAI(input, setMessages, setInput, setIsLoading, setIsGenerating, setAiMessage);
     }
   };
 
@@ -57,7 +59,7 @@ const Chat = () => {
           ))}
 
           {/* Loading indicator */}
-          {isLoading && (
+          {isGenerating && (
             <div className="inline-block p-3 rounded-lg text-sm leading-6 self-start bg-gray-200 text-black">
               <p>...</p>
             </div>
@@ -77,6 +79,7 @@ const Chat = () => {
               onKeyDown={handleKeyDown} // Listen for Enter key press
               placeholder="Type your message..."
               className="w-full p-3 text-white bg-custom-main rounded-md placeholder-white focus:outline-none"
+              disabled={isLoading} // Disable input while loading
             />
           </div>
 
@@ -86,7 +89,10 @@ const Chat = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9, rotate: 2 }}
               onClick={sendMessage} // Trigger sendMessage on button click
-              className="w-full p-3 bg-white text-black rounded-md hover:bg-white transition text-sm sm:text-base"
+              className={`w-full p-3 rounded-md transition text-sm sm:text-base ${
+                isLoading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white text-black hover:bg-gray-200"
+              }`}
+              disabled={isLoading} // Disable button while loading
             >
               Send
             </motion.button>
