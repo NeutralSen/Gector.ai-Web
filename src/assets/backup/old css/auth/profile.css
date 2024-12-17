@@ -1,0 +1,52 @@
+.profile-container {
+  background-color: #121212;
+  color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.profile-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  padding: 20px;
+  margin-top: 100px; /* Space for fixed header */
+}
+
+.profile-card {
+  background: #212121;
+  padding: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.profile-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #f9f9f9;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group label {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #f9f9f9;
+}
+
+.save-button {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #f9f9f9;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}

@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* Full height for body and html */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Center content with flexbox */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #212121;
+}
+
+/* Global buttons */
+button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Global Input */
+input {
+  padding: 10px;
+  border: 1px solid #2f2f2f;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+  background-color: #2f2f2f;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Container Borders */
+.container {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #212121;
+}
