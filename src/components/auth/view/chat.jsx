@@ -40,7 +40,7 @@ const Chat = () => {
       </header>
 
       {/* Chat Area - Full Width */}
-      <div className="mt-20 p-4 h-[80vh] w-[1200px] max-w-[1200px] mx-auto">
+      <div className="mt-20 p-4 h-[80vh] w-full max-w-[1200px] mx-auto">
         <div className="w-full h-full p-6 overflow-y-auto rounded-lg flex flex-col gap-4">
           {/* Loop through the messages */}
           {messages.map((msg, index) => (
@@ -65,30 +65,32 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Input Bar */}
-      <div className="grid grid-cols-12 gap-2 p-4 mt-[-20px]">
-        {/* Input Field - 10/12 Columns */}
-        <div className="col-span-11">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown} // Listen for Enter key press
-            placeholder="Type your message..."
-            className="w-full p-3 bg-custom-main rounded-md placeholder-white focus:outline-none"
-          />
-        </div>
+      {/* Input Bar Container */}
+      <div className="p-4 w-full mx-auto">
+        <div className="grid grid-cols-12 gap-2 mt-[-20px]">
+          {/* Input Field - 10/12 Columns */}
+          <div className="col-span-10 sm:col-span-11">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown} // Listen for Enter key press
+              placeholder="Type your message..."
+              className="w-full p-3 text-white bg-custom-main rounded-md placeholder-white focus:outline-none"
+            />
+          </div>
 
-        {/* Send Button - 2/12 Columns */}
-        <div className="col-span-1">
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.9, rotate: 2 }}
-            onClick={sendMessage} // Trigger sendMessage on button click
-            className="w-full p-3 bg-white text-black rounded-md hover:bg-white transition"
-          >
-            Send
-          </motion.button>
+          {/* Send Button - 2/12 Columns */}
+          <div className="col-span-2 sm:col-span-1">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9, rotate: 2 }}
+              onClick={sendMessage} // Trigger sendMessage on button click
+              className="w-full p-3 bg-white text-black rounded-md hover:bg-white transition text-sm sm:text-base"
+            >
+              Send
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>
