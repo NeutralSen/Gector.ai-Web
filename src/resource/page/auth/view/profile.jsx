@@ -1,5 +1,5 @@
-import React from "react";
-import logo from './../../../assets/img/gectorai.png';
+import React from "react"; 
+import Header from "./../../../include/navbar";
 
 const ProfilePage = () => {
   const handleSaveChanges = () => {
@@ -8,19 +8,8 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-container">
-      <header className="landing-header">
-        <nav className="navbar">
-          <div className="logo">
-            <img src={logo} alt="Logo" className="logo-img" />
-            <span className="logo-text">Gector.ai</span>
-          </div>
-          <ul className="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="/profile">Profile</a></li>
-          </ul>
-        </nav>
-      </header>
+      {/* Navbar */}
+      <Header isLandingPage={false} />
 
       <main className="profile-main">
         <div className="profile-card">
