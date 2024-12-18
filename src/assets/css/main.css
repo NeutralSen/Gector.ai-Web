@@ -10,3 +10,49 @@ body {
   background-color: #212121;
 }
 
+#about {
+  scroll-margin-top: 30px; /* Adjust the offset (positive moves it down, negative moves it up) */
+}
+
+#feature {
+  scroll-margin-top: 30px; /* Adjust the offset (positive moves it down, negative moves it up) */
+}
+
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Dark overlay with 70% opacity */
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the spinner */
+  transition: opacity 0.5s ease-out; /* Smooth transition for fade-out */
+}
+
+.spinner-container.fade-out {
+  opacity: 0; /* Fade out the overlay */
+  pointer-events: none; /* Disable interaction during fade-out */
+}
+
+.spinner {
+  border: 4px solid #fff; /* Spinner color */
+  border-top: 4px solid transparent; /* Make top transparent for a spinning effect */
+  border-radius: 50%;
+  width: 50px; /* Adjust the spinner size */
+  height: 50px; /* Adjust the spinner size */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+/* Transition effect is handled by inline classes */
+
