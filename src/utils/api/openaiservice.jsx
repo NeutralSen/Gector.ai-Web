@@ -14,6 +14,8 @@ const systemMessage = {
             Please keep responses concise unless asked for detailed explanations.`,
 };
 
+let currentController = null; // AbortController for managing stream cancellation
+
 export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading, setIsGenerating) => {
   if (!input.trim()) return; // Skip empty messages
 
@@ -24,8 +26,15 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
   setIsLoading(true);
   setIsGenerating(true);
 
+  // Abort any ongoing request before starting a new one
+  if (currentController) {
+    currentController.abort(); // Abort the previous request
+  }
+  currentController = new AbortController();
+  const { signal } = currentController;
+
   try {
-    const stream = await openai.chat.completions.create({
+    const currentStream = await openai.chat.completions.create({
       model: "Gector-1",
       messages: [
         systemMessage,
@@ -42,12 +51,16 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
       presence_penalty: 0,
       max_tokens: 120,
       stream: true,
+      signal, // Pass the signal to support aborting
     });
 
     let aiMessage = { sender: "ai", text: "" };
 
     // Use for-await-of to handle streamed responses
-    for await (const chunk of stream) {
+    for await (const chunk of currentStream) {
+      if (signal.aborted) {
+        throw new DOMException("Request aborted", "AbortError");
+      }
       const delta = chunk.choices[0]?.delta?.content || "";
       aiMessage.text += delta;
       
@@ -66,15 +79,14 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
       });
     }
   } catch (error) {
-    console.error("Error fetching AI response:", error);
 
-    // Check for specific error (503 Service Unavailable) or other signs of server overload
-    if (error.response && error.response.status === 503) {
+    // Handle abort explicitly
+    if (error.name === "AbortError") {
       setMessages((prev) => [
         ...prev,
-        { sender: "ai", text: "Sorry, the server is busy. Please try again later!" },
       ]);
     } else {
+      // Handle general errors
       setMessages((prev) => [
         ...prev,
         { sender: "ai", text: "Sorry, something went wrong!" },
@@ -82,5 +94,12 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
     }
   } finally {
     setIsLoading(false);
+  }
+};
+
+export const stopAIResponse = () => {
+  if (currentController) {
+    currentController.abort(); // Cancel the ongoing request
+    currentController = null; // Reset the controller
   }
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendMessageToAI } from "./../../../utils/api/openaiservice"; // Import the sendMessageToAI function
+import { sendMessageToAI, stopAIResponse } from "./../../../utils/api/openaiservice"; // Import the stopAIResponse function
 import { motion } from "motion/react";
 import logo from './../../../assets/img/gectorai.png';
 
@@ -8,12 +8,17 @@ const Chat = () => {
   const [input, setInput] = useState(""); // User input
   const [isLoading, setIsLoading] = useState(false); // Loading state for AI response
   const [isGenerating, setIsGenerating] = useState(false); // Generating state for AI response
-  const [aiMessage, setAiMessage] = useState(""); // AI message being generated
 
   const sendMessage = () => {
     if (input.trim()) {
-      sendMessageToAI(input, setMessages, setInput, setIsLoading, setIsGenerating, setAiMessage);
+      sendMessageToAI(input, setMessages, setInput, setIsLoading, setIsGenerating);
     }
+  };
+
+  const stopMessage = () => {
+    stopAIResponse();
+    setIsGenerating(false);
+    setIsLoading(false);
   };
 
   // Handle Enter key press
@@ -83,18 +88,16 @@ const Chat = () => {
             />
           </div>
 
-          {/* Send Button - 2/12 Columns */}
+          {/* Send/Stop Button - 2/12 Columns */}
           <div className="col-span-2 sm:col-span-1">
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9, rotate: 2 }}
-              onClick={sendMessage} // Trigger sendMessage on button click
-              className={`w-full p-3 rounded-md transition text-sm sm:text-base ${
-                isLoading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white text-black hover:bg-gray-200"
-              }`}
-              disabled={isLoading} // Disable button while loading
+              onClick={isLoading ? stopMessage : sendMessage} // Trigger sendMessage or stopMessage based on isGenerating
+              className={`w-full p-3 rounded-md transition text-sm sm:text-base bg-white text-black hover:bg-gray-200`}
+              // disabled={isLoading} // Disable button while loading
             >
-              Send
+              {isLoading ? "Stop" : "Send"}
             </motion.button>
           </div>
         </div>
