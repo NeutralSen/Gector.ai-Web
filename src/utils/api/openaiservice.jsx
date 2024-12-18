@@ -35,7 +35,7 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
 
   try {
     const currentStream = await openai.chat.completions.create({
-      model: "Gector-1",
+      model: "Gector128k",
       messages: [
         systemMessage,
         { role: "user", content: input },
@@ -49,7 +49,7 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
       repetition_penalty: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
-      max_tokens: 120,
+      max_tokens: 256,
       stream: true,
       signal, // Pass the signal to support aborting
     });
