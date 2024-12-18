@@ -39,7 +39,7 @@ Make sure you have the following installed on your machine:
     npm install
     ```
 
-3. **Create a .env file in the root directory and add your OpenAI API key and endpoint:**
+3. **Create a .env file in the root directory and add your API key and endpoint:**
 
     ```sh
     REACT_APP_API_KEY=API_KEY
