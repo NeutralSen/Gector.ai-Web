@@ -42,8 +42,8 @@ Make sure you have the following installed on your machine:
 3. **Create a .env file in the root directory and add your API key and endpoint:**
 
     ```sh
-    REACT_APP_API_KEY=API_KEY
-    REACT_APP_API_ENDPOINT=API_ENDPOINT
+    REACT_APP_API_KEY=your_apikey_here
+    REACT_APP_API_ENDPOINT=your_endpoint_here
     ```
 
 ### Running the App
