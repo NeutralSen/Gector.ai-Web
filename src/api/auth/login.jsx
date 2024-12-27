@@ -1,7 +1,7 @@
-// pages/api/login.js
-const connectMongo = require("../../utils/db");
-const User = require("../../models/User");
+const connectMongo = require("../../database/database");
+const User = require("../../database/schema/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); // Add this for JWT token
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -27,9 +27,12 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: "Invalid email or password." });
       }
 
-      // Optionally: Create a session or token (e.g., JWT or cookies)
+      // Create a JWT token (Add secret key to your .env)
+      const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
       return res.status(200).json({
         message: "Login successful.",
+        token, // Send token in the response
         user: { id: user._id, name: user.name, email: user.email },
       });
     } catch (err) {

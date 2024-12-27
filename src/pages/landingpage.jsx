@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./../include/navbar";
-import Footer from "./../include/footer";
-import Spinner from "./../../assets/animation/spinner"
+import Header from "./../components/navbar/navbar";
+import Footer from "./../components/footer/footer";
+import Spinner from "./../assets/animation/spinner"
 import { motion } from "framer-motion";
-import { button, cardAnimation, LRAnimation, RLAnimation } from "./../../assets/animation/motionconfig"
+import { button, cardAnimation, LRAnimation, RLAnimation } from "./../assets/animation/motionconfig"
 
 const LandingPage = () => {
   const [loading, setLoading] = useState(true);
