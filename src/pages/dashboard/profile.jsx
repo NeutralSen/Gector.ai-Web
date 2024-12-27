@@ -1,5 +1,5 @@
 import React from "react"; 
-import Header from "./../../../include/navbar";
+import Header from "./../../components/navbar/auth/authnavbar";
 
 const ProfilePage = () => {
   const handleSaveChanges = () => {

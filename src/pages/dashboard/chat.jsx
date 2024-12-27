@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { sendMessageToAI, stopAIResponse } from "../../../../utils/api/openaiservice"; // Import the stopAIResponse function
+import { sendMessageToAI, stopAIResponse } from "./../../api/openaiservice"; // Import the stopAIResponse function
 import { motion } from "motion/react";
-import { TBAnimation } from "./../../../../assets/animation/motionconfig";
-import Header from "./../../../include/navbar";
+import { TBAnimation } from "./../../assets/animation/motionconfig";
+import Header from "./../../components/navbar/auth/authnavbar";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]); // Chat messages
