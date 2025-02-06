@@ -35,7 +35,7 @@ export const sendMessageToAI = async (input, setMessages, setInput, setIsLoading
 
   try {
     const currentStream = await openai.chat.completions.create({
-      model: "Gector-3.5",
+      model: "Gector-3",
       messages: [
         systemMessage,
         { role: "user", content: input },
