@@ -29,8 +29,8 @@ Make sure you have the following installed on your machine:
 1. **Clone the repository:**
 
     ```sh
-    git clone https://github.com/your-username/gectorai-web.git
-    cd gectorai-web
+    git clone https://github.com/NeutralSen/Gector.ai-Web.git
+    cd Gector.ai-Web
     ```
 
 2. **Install the dependencies:**
